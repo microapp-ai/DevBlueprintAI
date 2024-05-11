@@ -18,9 +18,9 @@ import * as htmlToImage from 'html-to-image';
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
 import htmlToPdfmake from 'html-to-pdfmake';
 import { jsPDF } from 'jspdf';
-var pdfMake = require('pdfmake/build/pdfmake');
-var pdfFonts = require('pdfmake/build/vfs_fonts');
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+import domtoimage from 'dom-to-image';
+import { PDFDocument } from 'pdf-lib';
 
 const Home: FC = () => {
   const [projectDescription, setProjectDescription] = useState<string>('');
@@ -78,69 +78,41 @@ const Home: FC = () => {
   };
 
   const handlePrint = () => {
-    const element = document.getElementById('output_box');
-    if (!element) return;
-    var html = htmlToPdfmake(`${element.innerHTML}`);
-    var docDefinition = {
-      content: html,
-    };
-    pdfMake.createPdf(docDefinition).open();
-    // htmlToPdf(element).then((dataUri) => {
-    //   const link = document.createElement('a');
-    //   link.download = 'output.pdf';
-    //   link
-    //     .setAttribute('href', dataUri);
-    //   link.click();
-    // });
-  };
-
-  // The dimensions of a single A4 page; what we're basing the PDF document on.
-  const A4_MARGIN_PX = 40;
-  const A4_CONTENT_WIDTH_PX = 640;
-  const A4_PORTRAIT_RATIO = 1.414;
-  const A4_CONTENT_HEIGHT_PX = A4_CONTENT_WIDTH_PX * A4_PORTRAIT_RATIO;
-  const A4_TOTAL_WIDTH_PX = A4_CONTENT_WIDTH_PX + A4_MARGIN_PX * 2;
-  const A4_TOTAL_HEIGHT_PX = A4_CONTENT_HEIGHT_PX + A4_MARGIN_PX * 2;
-
-  // Will return a data URI string.
-  const htmlToPdf = async (element: HTMLElement): Promise<string> => {
-    const elementBounds = element.getBoundingClientRect();
-
-    const pdfBounds = [A4_TOTAL_WIDTH_PX, A4_TOTAL_HEIGHT_PX];
-    const pdf = new jsPDF('portrait', 'px', pdfBounds);
-
-    // These settings are optional, but I've found they help with file size and retina display support.
-    const pdfAsImage = await toJpeg(element, {
-      quality: 1,
-      pixelRatio: 2,
-    });
-    // // download this image
-    const link = document.createElement('a');
-    link.download = 'output.jpg';
-    link.setAttribute('href', pdfAsImage);
-    link.click();
-
-    const totalPages = Math.ceil(elementBounds.height / A4_CONTENT_HEIGHT_PX);
-
-    for (let pageNum = 0; pageNum < totalPages; pageNum++) {
-      // Add a page as long as it's not the first page, as jsPDF does this automatically.
-      // This will focus the added page, as a side-effect.
-      if (pageNum > 0) pdf.addPage(pdfBounds);
-
-      pdf.addImage(
-        pdfAsImage,
-        'jpg',
-
-        // Reposition the image based on the page number.
-        A4_MARGIN_PX,
-        A4_MARGIN_PX - pageNum * (A4_CONTENT_HEIGHT_PX + A4_MARGIN_PX * 2),
-
-        A4_CONTENT_WIDTH_PX,
-        elementBounds.height
-      );
+    try {
+      var node = document.getElementById('output_box');
+      if (!node) {
+        return;
+      }
+      let scale = 4;
+      domtoimage
+        .toPng(node as HTMLElement, {
+          width: node.scrollWidth * scale,
+          height: node.clientHeight * scale,
+          style: {
+            transform: 'scale(' + scale + ')',
+            transformOrigin: 'top left',
+          },
+        })
+        .then(async function (dataUrl) {
+          // convert it to pdf
+          const pdfDoc = await PDFDocument.create();
+          const pdfImage = await pdfDoc.embedPng(dataUrl);
+          const page = pdfDoc.addPage([pdfImage.width, pdfImage.height]);
+          page.drawImage(pdfImage, {
+            x: 0,
+            y: 0,
+            width: pdfImage.width,
+          });
+          const pdfBytes = await pdfDoc.save();
+          const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = 'blueprint.pdf';
+          link.click();
+        });
+    } catch (err) {
+      console.error(err);
     }
-
-    return pdf.output('datauristring');
   };
   return (
     <>

@@ -233,7 +233,7 @@ export default async function handler(
     ...\n
     \n\n
     ## These points are only for reference, please generate the output based on the provided project description\n\n
-    use markdown syntax for proper formatting\n\n
+    use markdown syntax for better formatting\n\n
     `;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
