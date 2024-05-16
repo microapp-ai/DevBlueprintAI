@@ -34,7 +34,7 @@ const Home: FC = () => {
     }
     setLoading(true);
     try {
-      const response = await fetch('/api/api', {
+      const response = await fetch('https://dev-blueprint-ai.vercel.app/api/api', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
