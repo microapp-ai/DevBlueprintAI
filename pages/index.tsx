@@ -22,6 +22,12 @@ import { jsPDF } from 'jspdf';
 import domtoimage from 'dom-to-image';
 import { PDFDocument } from 'pdf-lib';
 
+import dynamic from 'next/dynamic';
+const QuillEditor = dynamic(() => import('react-quill'), {
+  ssr: false, // This ensures it's not loaded during server-side rendering
+});
+import 'react-quill/dist/quill.snow.css';
+
 const Home: FC = () => {
   const [projectDescription, setProjectDescription] = useState<string>('');
   const [output, setOutput] = useState<string>('');
@@ -34,15 +40,18 @@ const Home: FC = () => {
     }
     setLoading(true);
     try {
-      const response = await fetch('/api/api', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          projectDescription,
-        }),
-      }).then((res) => res.json());
+      const response = await fetch(
+        'https://dev-blueprint-ai.vercel.app/api/api',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            projectDescription,
+          }),
+        }
+      ).then((res) => res.json());
       console.log(response);
       const { text } = response;
       const words = text.split(' ');
@@ -58,7 +67,7 @@ const Home: FC = () => {
             setOutput(outputText);
             currenIndex++;
             displayWord();
-          }, 100);
+          }, 10);
         } else {
           setLoading(false);
         }
@@ -79,7 +88,7 @@ const Home: FC = () => {
 
   const handlePrint = () => {
     try {
-      var node = document.getElementById('output_box');
+      var node = document.querySelector('#output_box .ql-editor');
       if (!node) {
         return;
       }
@@ -131,10 +140,12 @@ const Home: FC = () => {
       >
         <Textarea
           label="Describe your next development idea"
-          placeholder="Keep in mind that the more detailed the idea, the better the output will be."
+          placeholder={`Provide clear, detailed descriptions of your app's core functionalities, target audience, platform preferences, user interactions, and any specific requirements to get the best output.
+Example:
+"I want to build a mobile app for managing personal finances. Users should be able to create an account, link their bank accounts, and set budgets. The app should send notifications for upcoming bills and track spending habits. Security is a priority, so all financial data must be encrypted. The app should be developed using Flutter for both iOS and Android platforms."`}
           value={projectDescription}
           onChange={(event) => setProjectDescription(event.currentTarget.value)}
-          minRows={5}
+          minRows={6}
           mx={{
             xs: 'auto',
             sm: 0,
@@ -159,7 +170,7 @@ const Home: FC = () => {
             Generate
           </Button>
         </Flex>
-        <Box
+        {/* <Box
           style={{
             border: output !== '' ? '1px solid #c7c7c7' : 'none',
             minHeight: '200px',
@@ -171,38 +182,72 @@ const Home: FC = () => {
           <div>
             <Markdown>{output}</Markdown>
           </div>
-        </Box>
+        </Box> */}
 
-        <Flex justify={'space-evenly'} mt={12}>
-          <Button
-            color="green"
-            variant="light"
-            size="sm"
-            style={{
-              border: '1px solid',
-              boxShadow: '1px 1px 0px',
-            }}
-            onClick={() => {
-              navigator.clipboard.writeText(getText());
-            }}
-          >
-            {/* Save Project on Microapp */}
-            Copy Text
-          </Button>
-          <Button
-            color="green"
-            variant="light"
-            size="sm"
-            style={{
-              border: '1px solid',
-              boxShadow: '1px 1px 0px',
-            }}
-            onClick={handlePrint}
-            disabled={output === '' || loading}
-          >
-            Print a PDF
-          </Button>
-        </Flex>
+        {output !== '' && (
+          <>
+            <QuillEditor
+              value={output}
+              theme="snow"
+              onChange={(value) => {
+                setOutput(value);
+              }}
+              id={'output_box'}
+              modules={{
+                toolbar: [
+                  [{ font: [] }],
+                  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                  [{ size: ['small', false, 'large', 'huge'] }], // text size options
+                  ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+                  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+                  [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+                  ['blockquote', 'code-block'],
+                  [{ list: 'ordered' }, { list: 'bullet' }],
+                  [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
+                  [{ direction: 'rtl' }], // text direction
+                  [
+                    {
+                      align: [],
+                    },
+                  ],
+                  // ['link', 'image', 'video'],
+                  ['clean'], // remove formatting button
+                ],
+              }}
+            />
+            <Flex justify={'space-evenly'} mt={12}>
+              <Button
+                color="green"
+                variant="light"
+                size="sm"
+                style={{
+                  border: '1px solid',
+                  boxShadow: '1px 1px 0px',
+                }}
+                onClick={() => {
+                  navigator.clipboard.writeText(getText());
+                }}
+                disabled={output === '' || loading}
+              >
+                {/* Save Project on Microapp */}
+                Copy Text
+              </Button>
+              <Button
+                color="green"
+                variant="light"
+                size="sm"
+                style={{
+                  border: '1px solid',
+                  boxShadow: '1px 1px 0px',
+                }}
+                onClick={handlePrint}
+                disabled={output === '' || loading}
+              >
+                Print a PDF
+              </Button>
+            </Flex>
+          </>
+        )}
       </Box>
     </>
   );

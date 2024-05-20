@@ -214,26 +214,33 @@ export default async function handler(
   const { projectDescription } = req.body;
   console.log(req.body);
   try {
-    const prompt = `Given the provided project description, generate a comprehensive outline outlining the project requirements, recommended technologies, to-do list for development, and additional considerations. Please ensure that the output includes both functional and non-functional requirements, along with suitable technology recommendations and development steps.Please use the format\n\n
-    Project Requirements:\n
-    \tFunctional Requirements:\n
+    const prompt = `
+Given the provided project description, generate a comprehensive outline outlining the project requirements, recommended technologies, to-do list for development, and additional considerations. Please ensure that the output includes both functional and non-functional requirements, along with suitable technology recommendations and development steps.Please use the format
+    
+    \n\n
+# Project Outline
+\n
+\n
+
+# Project Requirements:\n
+    # Functional Requirements:\n
     ...
     ...\n
-    \tNon-Functional Requirements:\n
+    # Non-Functional Requirements:\n
     ...
     ...\n
-    Development Environment Setup:\n
+# Development Environment Setup:\n
     ...
     ...\n
-    To-Do List:\n
+# To-Do List:\n
     ...
     ...\n
-    Resource Recommendations:\n
+# Resource Recommendations:\n
     ...
     ...\n
     \n\n
     ## These points are only for reference, please generate the output based on the provided project description\n\n
-    use markdown syntax for better formatting\n\n
+    use HTML for better formatting\n\n
     `;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -253,7 +260,7 @@ export default async function handler(
             content: projectDescription,
           },
         ],
-        model: 'gpt-4-vision-preview',
+        model: 'gpt-3.5-turbo',
         max_tokens: 3000,
         temperature: 1,
         stop: '',
@@ -263,6 +270,7 @@ export default async function handler(
     console.log(data);
     let output = data.choices[0].message.content;
     output = output;
+    console.log(output);
     res.status(200).json({
       text: output,
     });
