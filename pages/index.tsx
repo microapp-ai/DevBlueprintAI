@@ -31,7 +31,7 @@ const QuillEditor = dynamic(() => import('react-quill'), {
   ssr: false, // This ensures it's not loaded during server-side rendering
 });
 import 'react-quill/dist/quill.snow.css';
-import wandIcon from '../images/right-icon.svg';
+
 import { IconCopy, IconPrinter } from '@tabler/icons-react';
 import { useColorScheme } from '@mantine/hooks';
 type HomeProps = {
@@ -203,16 +203,7 @@ const Home: FC<HomeProps> = (props) => {
 
           <Flex justify={'flex-end'} my={16}>
             <Button
-              leftIcon={
-                <img
-                  src={'right-icon.svg'}
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                    color: 'white',
-                  }}
-                />
-              }
+              leftIcon={<img src={'/images/right-icon.svg'} alt="" />}
               radius={'xl'}
               variant={app_theme !== 'dark' ? 'filled' : 'outline'}
               color="dark"
