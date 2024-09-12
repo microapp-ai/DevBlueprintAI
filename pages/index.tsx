@@ -140,7 +140,8 @@ const Home: FC<HomeProps> = (props) => {
   );
   const toggleColorScheme = (value?: ColorScheme) => {
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
-    setAppTheme(value === 'dark' ? 'dark' : 'light');
+    // setAppTheme(value === 'dark' ? 'dark' : 'light');
+    setAppTheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
   };
 
   return (
