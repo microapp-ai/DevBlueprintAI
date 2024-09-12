@@ -39,7 +39,7 @@ type HomeProps = {
 };
 
 const Home: FC<HomeProps> = (props) => {
-  const app_theme = props.theme || 'dark';
+  const app_theme = props.theme || 'light';
 
   const [projectDescription, setProjectDescription] = useState<string>('');
   const [output, setOutput] = useState<string>('');
