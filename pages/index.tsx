@@ -164,7 +164,7 @@ const Home: FC<HomeProps> = (props) => {
           }}
         >
           <Textarea
-            mt={'8vh'}
+            mt={'md'}
             radius={'25px'}
             label={
               <Text weight={700} size={'lg'}>
@@ -179,8 +179,7 @@ const Home: FC<HomeProps> = (props) => {
                 output.
               </Text>
             }
-            placeholder={`
-Example:
+            placeholder={`Example:
 "I want to build a mobile app for managing personal finances. Users should be able to create an account, link their bank accounts, and set budgets. The app should send notifications for upcoming bills and track spending habits. Security is a priority, so all financial data must be encrypted. The app should be developed using Flutter for both iOS and Android platforms."`}
             value={projectDescription}
             onChange={(event) =>
