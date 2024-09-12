@@ -11,6 +11,7 @@ import {
   Grid,
   Button,
   CopyButton,
+  rem,
 } from '@mantine/core';
 import Markdown from 'react-markdown';
 import removeMarkdown from 'markdown-to-text';
@@ -27,6 +28,8 @@ const QuillEditor = dynamic(() => import('react-quill'), {
   ssr: false, // This ensures it's not loaded during server-side rendering
 });
 import 'react-quill/dist/quill.snow.css';
+import wandIcon from '../images/right-icon.svg';
+import { IconCopy, IconPrinter } from '@tabler/icons-react';
 
 const Home: FC = () => {
   const [projectDescription, setProjectDescription] = useState<string>('');
@@ -139,8 +142,22 @@ const Home: FC = () => {
         }}
       >
         <Textarea
-          label="Describe your next development idea"
-          placeholder={`Provide clear, detailed descriptions of your app's core functionalities, target audience, platform preferences, user interactions, and any specific requirements to get the best output.
+          mt={'8vh'}
+          radius={'25px'}
+          label={
+            <Text weight={700} size={'lg'}>
+              Describe your next development idea
+            </Text>
+          }
+          description={
+            <Text size={'xs'}>
+              Provide clear, detailed descriptions of your app&apos;s core
+              functionalities, target audience, platform preferences, user
+              interactions, and any specific requirements to get the best
+              output.
+            </Text>
+          }
+          placeholder={`
 Example:
 "I want to build a mobile app for managing personal finances. Users should be able to create an account, link their bank accounts, and set budgets. The app should send notifications for upcoming bills and track spending habits. Security is a priority, so all financial data must be encrypted. The app should be developed using Flutter for both iOS and Android platforms."`}
           value={projectDescription}
@@ -150,39 +167,48 @@ Example:
             xs: 'auto',
             sm: 0,
           }}
+          styles={{
+            input: {
+              padding: '16px',
+            },
+          }}
         />
-        <Flex justify={'center'} my={12}>
+
+        <Flex justify={'flex-end'} my={16}>
           <Button
-            color="violet"
-            variant="light"
-            w={{
-              base: '100%',
-              md: '250px',
-            }}
-            size="md"
-            style={{
-              border: '1px solid',
-              boxShadow: '1px 1px 0px',
-            }}
+            leftIcon={
+              <img
+                src={'/right-icon.svg'}
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  color: 'white',
+                }}
+              />
+            }
+            radius={'xl'}
+            variant="filled"
+            color="dark"
+            disabled={loading || projectDescription === ''}
+            styles={(theme) => ({
+              root: {
+                backgroundColor: '#000000',
+                border: 0,
+                height: rem(42),
+                paddingLeft: rem(20),
+                paddingRight: rem(20),
+              },
+
+              leftIcon: {
+                // marginRight: theme.spacing.md,
+              },
+            })}
             onClick={handleGenerate}
             loading={loading}
           >
-            Generate
+            Generate Blueprint
           </Button>
         </Flex>
-        {/* <Box
-          style={{
-            border: output !== '' ? '1px solid #c7c7c7' : 'none',
-            minHeight: '200px',
-            borderRadius: '15px',
-          }}
-          id={'output_box'}
-          p={'xl'}
-        >
-          <div>
-            <Markdown>{output}</Markdown>
-          </div>
-        </Box> */}
 
         {output !== '' && (
           <>
@@ -193,6 +219,9 @@ Example:
                 setOutput(value);
               }}
               id={'output_box'}
+              style={{
+                borderRadius: '25px',
+              }}
               modules={{
                 toolbar: [
                   [{ font: [] }],
@@ -215,15 +244,25 @@ Example:
                 ],
               }}
             />
-            <Flex justify={'space-evenly'} mt={12}>
+            <Flex justify={'flex-end'} mt={12} gap={8}>
               <Button
-                color="green"
-                variant="light"
-                size="sm"
-                style={{
-                  border: '1px solid',
-                  boxShadow: '1px 1px 0px',
-                }}
+                leftIcon={<IconCopy size={20} stroke={1} />}
+                radius={'xl'}
+                variant="filled"
+                color="dark"
+                styles={(theme) => ({
+                  root: {
+                    backgroundColor: '#000000',
+                    border: 0,
+                    height: rem(42),
+                    paddingLeft: rem(20),
+                    paddingRight: rem(20),
+                  },
+
+                  leftIcon: {
+                    // marginRight: theme.spacing.md,
+                  },
+                })}
                 onClick={() => {
                   navigator.clipboard.writeText(getText());
                 }}
@@ -233,13 +272,23 @@ Example:
                 Copy Text
               </Button>
               <Button
-                color="green"
-                variant="light"
-                size="sm"
-                style={{
-                  border: '1px solid',
-                  boxShadow: '1px 1px 0px',
-                }}
+                leftIcon={<IconPrinter size={20} stroke={1} />}
+                radius={'xl'}
+                variant="filled"
+                color="dark"
+                styles={(theme) => ({
+                  root: {
+                    backgroundColor: '#000000',
+                    border: 0,
+                    height: rem(42),
+                    paddingLeft: rem(20),
+                    paddingRight: rem(20),
+                  },
+
+                  leftIcon: {
+                    // marginRight: theme.spacing.md,
+                  },
+                })}
                 onClick={handlePrint}
                 disabled={output === '' || loading}
               >

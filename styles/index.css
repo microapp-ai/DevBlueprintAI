@@ -5,3 +5,11 @@ body,
   padding: 0;
   margin: 0;
 }
+
+
+.ql-toolbar {
+  border-radius: 25px 25px 0 0;
+}
+.ql-container{
+  border-radius: 0 0 25px 25px;
+}
