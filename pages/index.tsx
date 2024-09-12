@@ -39,7 +39,7 @@ type HomeProps = {
 };
 
 const Home: FC<HomeProps> = (props) => {
-  const app_theme = props.theme || 'light';
+  const [app_theme, setAppTheme] = useState<string>(props.theme || 'light');
 
   const [projectDescription, setProjectDescription] = useState<string>('');
   const [output, setOutput] = useState<string>('');
@@ -138,8 +138,11 @@ const Home: FC<HomeProps> = (props) => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
     app_theme === 'dark' ? 'dark' : 'light'
   );
-  const toggleColorScheme = (value?: ColorScheme) =>
+  const toggleColorScheme = (value?: ColorScheme) => {
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+    setAppTheme(value === 'dark' ? 'dark' : 'light');
+  };
+
   return (
     <ColorSchemeProvider
       colorScheme={colorScheme}
@@ -193,6 +196,7 @@ const Home: FC<HomeProps> = (props) => {
             styles={{
               input: {
                 padding: '16px',
+                backgroundColor: 'transparent',
               },
             }}
           />
@@ -201,7 +205,7 @@ const Home: FC<HomeProps> = (props) => {
             <Button
               leftIcon={
                 <img
-                  src={'/right-icon.svg'}
+                  src={'right-icon.svg'}
                   style={{
                     width: '20px',
                     height: '20px',
