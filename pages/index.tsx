@@ -12,6 +12,9 @@ import {
   Button,
   CopyButton,
   rem,
+  MantineProvider,
+  ColorSchemeProvider,
+  ColorScheme,
 } from '@mantine/core';
 import Markdown from 'react-markdown';
 import removeMarkdown from 'markdown-to-text';
@@ -30,8 +33,14 @@ const QuillEditor = dynamic(() => import('react-quill'), {
 import 'react-quill/dist/quill.snow.css';
 import wandIcon from '../images/right-icon.svg';
 import { IconCopy, IconPrinter } from '@tabler/icons-react';
+import { useColorScheme } from '@mantine/hooks';
+type HomeProps = {
+  theme?: string; // 'light' | 'dark'
+};
 
-const Home: FC = () => {
+const Home: FC<HomeProps> = (props) => {
+  const app_theme = props.theme || 'dark';
+
   const [projectDescription, setProjectDescription] = useState<string>('');
   const [output, setOutput] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -126,179 +135,199 @@ const Home: FC = () => {
       console.error(err);
     }
   };
+  const [colorScheme, setColorScheme] = useState<ColorScheme>(
+    app_theme === 'dark' ? 'dark' : 'light'
+  );
+  const toggleColorScheme = (value?: ColorScheme) =>
+    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
   return (
-    <>
-      <Box
-        w={{
-          md: 800,
-          lg: 900,
-          base: '100%',
-        }}
-        p={8}
-        mx={'auto'}
-        my={{
-          md: 'lg',
-          base: 'xl',
-        }}
+    <ColorSchemeProvider
+      colorScheme={colorScheme}
+      toggleColorScheme={toggleColorScheme}
+    >
+      <MantineProvider
+        theme={{ colorScheme }}
+        withGlobalStyles
+        withNormalizeCSS
       >
-        <Textarea
-          mt={'8vh'}
-          radius={'25px'}
-          label={
-            <Text weight={700} size={'lg'}>
-              Describe your next development idea
-            </Text>
-          }
-          description={
-            <Text size={'xs'}>
-              Provide clear, detailed descriptions of your app&apos;s core
-              functionalities, target audience, platform preferences, user
-              interactions, and any specific requirements to get the best
-              output.
-            </Text>
-          }
-          placeholder={`
+        <Box
+          w={{
+            md: 800,
+            lg: 900,
+            base: '100%',
+          }}
+          p={8}
+          mx={'auto'}
+          my={{
+            md: 'lg',
+            base: 'xl',
+          }}
+        >
+          <Textarea
+            mt={'8vh'}
+            radius={'25px'}
+            label={
+              <Text weight={700} size={'lg'}>
+                Describe your next development idea
+              </Text>
+            }
+            description={
+              <Text size={'xs'}>
+                Provide clear, detailed descriptions of your app&apos;s core
+                functionalities, target audience, platform preferences, user
+                interactions, and any specific requirements to get the best
+                output.
+              </Text>
+            }
+            placeholder={`
 Example:
 "I want to build a mobile app for managing personal finances. Users should be able to create an account, link their bank accounts, and set budgets. The app should send notifications for upcoming bills and track spending habits. Security is a priority, so all financial data must be encrypted. The app should be developed using Flutter for both iOS and Android platforms."`}
-          value={projectDescription}
-          onChange={(event) => setProjectDescription(event.currentTarget.value)}
-          minRows={6}
-          mx={{
-            xs: 'auto',
-            sm: 0,
-          }}
-          styles={{
-            input: {
-              padding: '16px',
-            },
-          }}
-        />
+            value={projectDescription}
+            onChange={(event) =>
+              setProjectDescription(event.currentTarget.value)
+            }
+            minRows={6}
+            mx={{
+              xs: 'auto',
+              sm: 0,
+            }}
+            styles={{
+              input: {
+                padding: '16px',
+              },
+            }}
+          />
 
-        <Flex justify={'flex-end'} my={16}>
-          <Button
-            leftIcon={
-              <img
-                src={'/right-icon.svg'}
+          <Flex justify={'flex-end'} my={16}>
+            <Button
+              leftIcon={
+                <img
+                  src={'/right-icon.svg'}
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    color: 'white',
+                  }}
+                />
+              }
+              radius={'xl'}
+              variant={app_theme !== 'dark' ? 'filled' : 'outline'}
+              color="dark"
+              disabled={loading || projectDescription === ''}
+              styles={(theme) => ({
+                root: {
+                  backgroundColor: app_theme !== 'dark' ? '#000000' : '#ffff',
+                  border: 0,
+                  height: rem(42),
+                  paddingLeft: rem(20),
+                  paddingRight: rem(20),
+                  '&:hover': {
+                    backgroundColor:
+                      app_theme === 'dark' ? '#808080' : '#333333',
+                  },
+                },
+              })}
+              onClick={handleGenerate}
+              loading={loading}
+            >
+              Generate Blueprint
+            </Button>
+          </Flex>
+
+          {output !== '' && (
+            <>
+              <QuillEditor
+                value={output}
+                theme="snow"
+                onChange={(value) => {
+                  setOutput(value);
+                }}
+                id={'output_box'}
                 style={{
-                  width: '20px',
-                  height: '20px',
-                  color: 'white',
+                  borderRadius: '25px',
+                }}
+                modules={{
+                  toolbar: [
+                    [{ font: [] }],
+                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                    [{ size: ['small', false, 'large', 'huge'] }], // text size options
+                    ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+                    [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+                    [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+                    ['blockquote', 'code-block'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
+                    [{ direction: 'rtl' }], // text direction
+                    [
+                      {
+                        align: [],
+                      },
+                    ],
+                    // ['link', 'image', 'video'],
+                    ['clean'], // remove formatting button
+                  ],
                 }}
               />
-            }
-            radius={'xl'}
-            variant="filled"
-            color="dark"
-            disabled={loading || projectDescription === ''}
-            styles={(theme) => ({
-              root: {
-                backgroundColor: '#000000',
-                border: 0,
-                height: rem(42),
-                paddingLeft: rem(20),
-                paddingRight: rem(20),
-              },
-
-              leftIcon: {
-                // marginRight: theme.spacing.md,
-              },
-            })}
-            onClick={handleGenerate}
-            loading={loading}
-          >
-            Generate Blueprint
-          </Button>
-        </Flex>
-
-        {output !== '' && (
-          <>
-            <QuillEditor
-              value={output}
-              theme="snow"
-              onChange={(value) => {
-                setOutput(value);
-              }}
-              id={'output_box'}
-              style={{
-                borderRadius: '25px',
-              }}
-              modules={{
-                toolbar: [
-                  [{ font: [] }],
-                  [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                  [{ size: ['small', false, 'large', 'huge'] }], // text size options
-                  ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-                  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-                  [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
-                  ['blockquote', 'code-block'],
-                  [{ list: 'ordered' }, { list: 'bullet' }],
-                  [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
-                  [{ direction: 'rtl' }], // text direction
-                  [
-                    {
-                      align: [],
+              <Flex justify={'flex-end'} mt={12} gap={8}>
+                <Button
+                  leftIcon={<IconCopy size={20} stroke={1} />}
+                  radius={'xl'}
+                  variant={app_theme !== 'dark' ? 'filled' : 'outline'}
+                  color="dark"
+                  // disabled={loading || projectDescription === ''}
+                  styles={(theme) => ({
+                    root: {
+                      backgroundColor:
+                        app_theme !== 'dark' ? '#000000' : '#ffff',
+                      border: 0,
+                      height: rem(42),
+                      paddingLeft: rem(20),
+                      paddingRight: rem(20),
+                      '&:hover': {
+                        backgroundColor:
+                          app_theme === 'dark' ? '#808080' : '#333333',
+                      },
                     },
-                  ],
-                  // ['link', 'image', 'video'],
-                  ['clean'], // remove formatting button
-                ],
-              }}
-            />
-            <Flex justify={'flex-end'} mt={12} gap={8}>
-              <Button
-                leftIcon={<IconCopy size={20} stroke={1} />}
-                radius={'xl'}
-                variant="filled"
-                color="dark"
-                styles={(theme) => ({
-                  root: {
-                    backgroundColor: '#000000',
-                    border: 0,
-                    height: rem(42),
-                    paddingLeft: rem(20),
-                    paddingRight: rem(20),
-                  },
-
-                  leftIcon: {
-                    // marginRight: theme.spacing.md,
-                  },
-                })}
-                onClick={() => {
-                  navigator.clipboard.writeText(getText());
-                }}
-                disabled={output === '' || loading}
-              >
-                {/* Save Project on Microapp */}
-                Copy Text
-              </Button>
-              <Button
-                leftIcon={<IconPrinter size={20} stroke={1} />}
-                radius={'xl'}
-                variant="filled"
-                color="dark"
-                styles={(theme) => ({
-                  root: {
-                    backgroundColor: '#000000',
-                    border: 0,
-                    height: rem(42),
-                    paddingLeft: rem(20),
-                    paddingRight: rem(20),
-                  },
-
-                  leftIcon: {
-                    // marginRight: theme.spacing.md,
-                  },
-                })}
-                onClick={handlePrint}
-                disabled={output === '' || loading}
-              >
-                Print a PDF
-              </Button>
-            </Flex>
-          </>
-        )}
-      </Box>
-    </>
+                  })}
+                  onClick={() => {
+                    navigator.clipboard.writeText(getText());
+                  }}
+                  disabled={output === '' || loading}
+                >
+                  {/* Save Project on Microapp */}
+                  Copy Text
+                </Button>
+                <Button
+                  leftIcon={<IconPrinter size={20} stroke={1} />}
+                  radius={'xl'}
+                  variant={app_theme !== 'dark' ? 'filled' : 'outline'}
+                  color="dark"
+                  // disabled={loading || projectDescription === ''}
+                  styles={(theme) => ({
+                    root: {
+                      backgroundColor:
+                        app_theme !== 'dark' ? '#000000' : '#ffff',
+                      border: 0,
+                      height: rem(42),
+                      paddingLeft: rem(20),
+                      paddingRight: rem(20),
+                      '&:hover': {
+                        backgroundColor:
+                          app_theme === 'dark' ? '#808080' : '#333333',
+                      },
+                    },
+                  })}
+                  onClick={handlePrint}
+                  disabled={output === '' || loading}
+                >
+                  Print a PDF
+                </Button>
+              </Flex>
+            </>
+          )}
+        </Box>
+      </MantineProvider>
+    </ColorSchemeProvider>
   );
 };
 
