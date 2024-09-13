@@ -34,12 +34,13 @@ import 'react-quill/dist/quill.snow.css';
 
 import { IconCopy, IconPrinter } from '@tabler/icons-react';
 import { useColorScheme } from '@mantine/hooks';
+import StyledButton from '@/components/StyledButton';
 type HomeProps = {
   theme?: string; // 'light' | 'dark'
 };
 
 const Home: FC<HomeProps> = (props) => {
-  const [app_theme, setAppTheme] = useState<string>(props.theme || 'light');
+  const [app_theme, setAppTheme] = useState<string>(props.theme || 'dark');
 
   const [projectDescription, setProjectDescription] = useState<string>('');
   const [output, setOutput] = useState<string>('');
@@ -203,8 +204,8 @@ const Home: FC<HomeProps> = (props) => {
           />
 
           <Flex justify={'flex-end'} my={16}>
-            <Button
-              leftIcon={<img src={'/images/right-icon.svg'} alt="" />}
+            {/* <Button
+              leftIcon={<img src={'../public/images/right-icon.svg'} alt="" />}
               radius={'xl'}
               variant={app_theme !== 'dark' ? 'filled' : 'outline'}
               color="dark"
@@ -226,7 +227,31 @@ const Home: FC<HomeProps> = (props) => {
               loading={loading}
             >
               Generate Blueprint
-            </Button>
+            </Button> */}
+            <StyledButton
+              label="Generate Blueprint"
+              app_theme={app_theme}
+              icon={
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.5 4.33341V2.66675M13.5 14.3334V12.6667M7.66667 8.50008H9.33333M17.6667 8.50008H19.3333M15.8333 10.8334L16.8333 11.8334M15.8333 6.16675L16.8333 5.16675M3.5 18.5001L11 11.0001M11.1667 6.16675L10.1667 5.16675"
+                    stroke="#909098"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              }
+              loading={loading}
+              disabled={projectDescription === ''}
+              onClick={handleGenerate}
+            />
           </Flex>
 
           {output !== '' && (
@@ -264,7 +289,7 @@ const Home: FC<HomeProps> = (props) => {
                 }}
               />
               <Flex justify={'flex-end'} mt={12} gap={8}>
-                <Button
+                {/* <Button
                   leftIcon={<IconCopy size={20} stroke={1} />}
                   radius={'xl'}
                   variant={app_theme !== 'dark' ? 'filled' : 'outline'}
@@ -289,10 +314,21 @@ const Home: FC<HomeProps> = (props) => {
                   }}
                   disabled={output === '' || loading}
                 >
-                  {/* Save Project on Microapp */}
+                
                   Copy Text
-                </Button>
-                <Button
+                </Button> */}
+                <StyledButton
+                  label="Copy Text"
+                  app_theme={app_theme}
+                  icon={<IconCopy size={20} stroke={1} />}
+                  loading={loading}
+                  disabled={output === ''}
+                  onClick={() => {
+                    navigator.clipboard.writeText(getText());
+                  }}
+                />
+
+                {/* <Button
                   leftIcon={<IconPrinter size={20} stroke={1} />}
                   radius={'xl'}
                   variant={app_theme !== 'dark' ? 'filled' : 'outline'}
@@ -316,7 +352,15 @@ const Home: FC<HomeProps> = (props) => {
                   disabled={output === '' || loading}
                 >
                   Print a PDF
-                </Button>
+                </Button> */}
+                <StyledButton
+                  label="Print a PDF"
+                  app_theme={app_theme}
+                  icon={<IconPrinter size={20} stroke={1} />}
+                  loading={loading}
+                  disabled={output === ''}
+                  onClick={handlePrint}
+                />
               </Flex>
             </>
           )}
