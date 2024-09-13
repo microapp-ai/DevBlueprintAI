@@ -41,10 +41,10 @@ type HomeProps = {
 
 const Home: FC<HomeProps> = (props) => {
   // App theme setup
-  const [app_theme, setAppTheme] = useState<string>(props.theme || 'dark');
+  const [app_theme, setAppTheme] = useState<string>(props.theme || 'light');
   const toggleColorScheme = (value?: ColorScheme) => {
     console.log('Toggle color scheme', value);
-    setAppTheme(value || (app_theme === 'dark' ? 'light' : 'dark'));
+    setAppTheme(value === 'dark' ? 'dark' : 'light');
   };
   useEffect(() => {
     if (props.theme) {
