@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Select,
   TextInput,
@@ -40,7 +40,17 @@ type HomeProps = {
 };
 
 const Home: FC<HomeProps> = (props) => {
+  // App theme setup
   const [app_theme, setAppTheme] = useState<string>(props.theme || 'dark');
+  const toggleColorScheme = (value?: ColorScheme) => {
+    console.log('Toggle color scheme', value);
+    setAppTheme(value || (app_theme === 'dark' ? 'light' : 'dark'));
+  };
+  useEffect(() => {
+    if (props.theme) {
+      toggleColorScheme(props.theme === 'dark' ? 'dark' : 'light');
+    }
+  }, [props.theme]);
 
   const [projectDescription, setProjectDescription] = useState<string>('');
   const [output, setOutput] = useState<string>('');
@@ -136,23 +146,14 @@ const Home: FC<HomeProps> = (props) => {
       console.error(err);
     }
   };
-  const [colorScheme, setColorScheme] = useState<ColorScheme>(
-    app_theme === 'dark' ? 'dark' : 'light'
-  );
-  const toggleColorScheme = (value?: ColorScheme) => {
-    console.log('Toggle color scheme', value);
-    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
-    // setAppTheme(value === 'dark' ? 'dark' : 'light');
-    setAppTheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
-  };
 
   return (
     <ColorSchemeProvider
-      colorScheme={colorScheme}
+      colorScheme={app_theme === 'dark' ? 'dark' : 'light'}
       toggleColorScheme={toggleColorScheme}
     >
       <MantineProvider
-        theme={{ colorScheme }}
+        theme={{ colorScheme: app_theme === 'dark' ? 'dark' : 'light' }}
         withGlobalStyles
         withNormalizeCSS
       >
