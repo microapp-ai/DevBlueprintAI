@@ -41,21 +41,6 @@ type HomeProps = {
   theme?: string; // 'light' | 'dark'
 };
 
-const Parent: FC = () => {
-  const [theme, setTheme] = useState<string>('light');
-
-  return (
-    <>
-      <Switch
-        label="Toggle theme"
-        checked={theme === 'dark'}
-        onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      />
-      <Home theme={theme} />
-    </>
-  );
-};
-
 const Home: FC<HomeProps> = (props) => {
   // App theme setup
   const [app_theme, setAppTheme] = useState<string>(props.theme || 'light');
@@ -321,4 +306,4 @@ const Home: FC<HomeProps> = (props) => {
   );
 };
 
-export default Parent;
+export default Home;
