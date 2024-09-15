@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const { NextFederationPlugin } = require('@module-federation/nextjs-mf');
+const nextTranslate = require('next-translate-plugin');
 
 const nextConfig = {
   reactStrictMode: false,
@@ -24,4 +25,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = nextTranslate(nextConfig);

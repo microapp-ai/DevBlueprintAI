@@ -1,0 +1,8 @@
+{
+  "input-title": "Décrivez votre prochaine idée de développement",
+  "input-desc": "Fournissez des descriptions claires et détaillées des fonctionnalités de votre application, du public cible, des préférences de plateforme, des interactions utilisateur et de tout besoin spécifique pour obtenir le meilleur résultat.",
+  "input-placeholder": "Exemple :\n\"Je veux créer une application mobile pour gérer les finances personnelles. Les utilisateurs devraient pouvoir créer un compte, lier leurs comptes bancaires et définir des budgets. L'application devrait envoyer des notifications pour les factures à venir et suivre les habitudes de dépenses. La sécurité est une priorité, donc toutes les données financières doivent être cryptées. L'application doit être développée en utilisant Flutter pour les plateformes iOS et Android.\"",
+  "generate-label": "Générer un plan",
+  "copy-label": "Copier le texte",
+  "print-label": "Imprimer un PDF"
+}

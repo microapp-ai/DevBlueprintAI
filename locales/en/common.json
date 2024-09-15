@@ -1,0 +1,8 @@
+{
+  "input-title": "Describe your next development idea",
+  "input-desc": "Provide clear, detailed descriptions of your app's functionalities, target audience, platform preferences, user interactions and any specific requirements to get the best output.",
+  "input-placeholder": "Example:\n\"I want to build a mobile app for managing personal finances. Users should be able to create an account, link their bank accounts, and set budgets. The app should send notifications for upcoming bills and track spending habits. Security is a priority, so all financial data must be encrypted. The app should be developed using Flutter for both iOS and Android platforms.\"",
+  "generate-label": "Generate Blueprint",
+  "copy-label": "Copy Text",
+  "print-label": "Print a PDF"
+}

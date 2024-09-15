@@ -15,6 +15,7 @@ import {
   MantineProvider,
   ColorSchemeProvider,
   ColorScheme,
+  Switch,
 } from '@mantine/core';
 import Markdown from 'react-markdown';
 import removeMarkdown from 'markdown-to-text';
@@ -22,7 +23,7 @@ import * as htmlToImage from 'html-to-image';
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
 import htmlToPdfmake from 'html-to-pdfmake';
 import { jsPDF } from 'jspdf';
-
+import useTranslation from 'next-translate/useTranslation';
 import domtoimage from 'dom-to-image';
 import { PDFDocument } from 'pdf-lib';
 
@@ -35,8 +36,24 @@ import 'react-quill/dist/quill.snow.css';
 import { IconCopy, IconPrinter } from '@tabler/icons-react';
 import { useColorScheme } from '@mantine/hooks';
 import StyledButton from '@/components/StyledButton';
+import { useRouter } from 'next/router';
 type HomeProps = {
   theme?: string; // 'light' | 'dark'
+};
+
+const Parent: FC = () => {
+  const [theme, setTheme] = useState<string>('light');
+
+  return (
+    <>
+      <Switch
+        label="Toggle theme"
+        checked={theme === 'dark'}
+        onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      />
+      <Home theme={theme} />
+    </>
+  );
 };
 
 const Home: FC<HomeProps> = (props) => {
@@ -51,6 +68,24 @@ const Home: FC<HomeProps> = (props) => {
       toggleColorScheme(props.theme === 'dark' ? 'dark' : 'light');
     }
   }, [props.theme]);
+  const router = useRouter();
+  const { t, lang: currentLang } = useTranslation('common');
+  const [language, setLanguage] = useState(currentLang);
+  useEffect(() => {
+    const { lang } = router.query;
+    if (
+      lang &&
+      ['en', 'es', 'fr', 'pt'].includes(lang as string) &&
+      lang !== currentLang
+    ) {
+      // Update the locale without reloading the page
+      setLanguage(lang as string);
+      router.push(router.pathname, router.asPath, {
+        locale: lang as string,
+        shallow: true,
+      });
+    }
+  }, [router.query, currentLang, router]);
 
   const [projectDescription, setProjectDescription] = useState<string>('');
   const [output, setOutput] = useState<string>('');
@@ -175,19 +210,11 @@ const Home: FC<HomeProps> = (props) => {
             radius={'25px'}
             label={
               <Text weight={700} size={'lg'}>
-                Describe your next development idea
+                {t('input-title')}
               </Text>
             }
-            description={
-              <Text size={'xs'}>
-                Provide clear, detailed descriptions of your app&apos;s core
-                functionalities, target audience, platform preferences, user
-                interactions, and any specific requirements to get the best
-                output.
-              </Text>
-            }
-            placeholder={`Example:
-"I want to build a mobile app for managing personal finances. Users should be able to create an account, link their bank accounts, and set budgets. The app should send notifications for upcoming bills and track spending habits. Security is a priority, so all financial data must be encrypted. The app should be developed using Flutter for both iOS and Android platforms."`}
+            description={<Text size={'xs'}>{t('input-desc')}</Text>}
+            placeholder={t('input-placeholder')}
             value={projectDescription}
             onChange={(event) =>
               setProjectDescription(event.currentTarget.value)
@@ -206,32 +233,8 @@ const Home: FC<HomeProps> = (props) => {
           />
 
           <Flex justify={'flex-end'} my={16}>
-            {/* <Button
-              leftIcon={<img src={'../public/images/right-icon.svg'} alt="" />}
-              radius={'xl'}
-              variant={app_theme !== 'dark' ? 'filled' : 'outline'}
-              color="dark"
-              disabled={loading || projectDescription === ''}
-              styles={(theme) => ({
-                root: {
-                  backgroundColor: app_theme !== 'dark' ? '#000000' : '#ffff',
-                  border: 0,
-                  height: rem(42),
-                  paddingLeft: rem(20),
-                  paddingRight: rem(20),
-                  '&:hover': {
-                    backgroundColor:
-                      app_theme === 'dark' ? '#808080' : '#333333',
-                  },
-                },
-              })}
-              onClick={handleGenerate}
-              loading={loading}
-            >
-              Generate Blueprint
-            </Button> */}
             <StyledButton
-              label="Generate Blueprint"
+              label={t('generate-label')}
               app_theme={app_theme}
               icon={
                 <svg
@@ -291,36 +294,8 @@ const Home: FC<HomeProps> = (props) => {
                 }}
               />
               <Flex justify={'flex-end'} mt={12} gap={8}>
-                {/* <Button
-                  leftIcon={<IconCopy size={20} stroke={1} />}
-                  radius={'xl'}
-                  variant={app_theme !== 'dark' ? 'filled' : 'outline'}
-                  color="dark"
-                  // disabled={loading || projectDescription === ''}
-                  styles={(theme) => ({
-                    root: {
-                      backgroundColor:
-                        app_theme !== 'dark' ? '#000000' : '#ffff',
-                      border: 0,
-                      height: rem(42),
-                      paddingLeft: rem(20),
-                      paddingRight: rem(20),
-                      '&:hover': {
-                        backgroundColor:
-                          app_theme === 'dark' ? '#808080' : '#333333',
-                      },
-                    },
-                  })}
-                  onClick={() => {
-                    navigator.clipboard.writeText(getText());
-                  }}
-                  disabled={output === '' || loading}
-                >
-                
-                  Copy Text
-                </Button> */}
                 <StyledButton
-                  label="Copy Text"
+                  label={t('copy-label')}
                   app_theme={app_theme}
                   icon={<IconCopy size={20} stroke={1} />}
                   loading={loading}
@@ -329,34 +304,8 @@ const Home: FC<HomeProps> = (props) => {
                     navigator.clipboard.writeText(getText());
                   }}
                 />
-
-                {/* <Button
-                  leftIcon={<IconPrinter size={20} stroke={1} />}
-                  radius={'xl'}
-                  variant={app_theme !== 'dark' ? 'filled' : 'outline'}
-                  color="dark"
-                  // disabled={loading || projectDescription === ''}
-                  styles={(theme) => ({
-                    root: {
-                      backgroundColor:
-                        app_theme !== 'dark' ? '#000000' : '#ffff',
-                      border: 0,
-                      height: rem(42),
-                      paddingLeft: rem(20),
-                      paddingRight: rem(20),
-                      '&:hover': {
-                        backgroundColor:
-                          app_theme === 'dark' ? '#808080' : '#333333',
-                      },
-                    },
-                  })}
-                  onClick={handlePrint}
-                  disabled={output === '' || loading}
-                >
-                  Print a PDF
-                </Button> */}
                 <StyledButton
-                  label="Print a PDF"
+                  label={t('print-label')}
                   app_theme={app_theme}
                   icon={<IconPrinter size={20} stroke={1} />}
                   loading={loading}
@@ -372,4 +321,4 @@ const Home: FC<HomeProps> = (props) => {
   );
 };
 
-export default Home;
+export default Parent;
