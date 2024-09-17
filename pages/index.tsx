@@ -58,6 +58,7 @@ const Home: FC<HomeProps> = (props) => {
   const [language, setLanguage] = useState(currentLang);
   useEffect(() => {
     const { lang } = router.query;
+    console.log('Current Lang: ', lang);
     if (
       lang &&
       ['en', 'es', 'fr', 'pt'].includes(lang as string) &&

@@ -6,8 +6,8 @@ import { mantineTheme } from '@/styles/mantine-theme';
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
   return (
-    <MantineProvider withGlobalStyles withNormalizeCSS theme={mantineTheme}>
-      <Component {...pageProps} />
-    </MantineProvider>
+    // <MantineProvider withGlobalStyles withNormalizeCSS theme={mantineTheme}>
+    <Component {...pageProps} />
+    // </MantineProvider>
   );
 }
