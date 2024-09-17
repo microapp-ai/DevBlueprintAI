@@ -58,13 +58,12 @@ const Home: FC<HomeProps> = (props) => {
   const [language, setLanguage] = useState(currentLang);
   useEffect(() => {
     const { lang } = router.query;
-    console.log('Current Lang: ', lang);
+    console.log('Current Lang: ', lang, currentLang);
     if (
       lang &&
       ['en', 'es', 'fr', 'pt'].includes(lang as string) &&
       lang !== currentLang
     ) {
-      // Update the locale without reloading the page
       setLanguage(lang as string);
       router.push(router.pathname, router.asPath, {
         locale: lang as string,
