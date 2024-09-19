@@ -64,6 +64,7 @@ const Home: FC<HomeProps> = (props) => {
       ['en', 'es', 'fr', 'pt'].includes(lang as string) &&
       lang !== currentLang
     ) {
+      // Update the locale without reloading the page
       setLanguage(lang as string);
       router.push(router.pathname, router.asPath, {
         locale: lang as string,
@@ -179,8 +180,7 @@ const Home: FC<HomeProps> = (props) => {
       >
         <Box
           w={{
-            md: 800,
-            lg: 900,
+            md: '57%',
             base: '100%',
           }}
           p={8}
@@ -192,19 +192,20 @@ const Home: FC<HomeProps> = (props) => {
         >
           <Textarea
             mt={'md'}
-            radius={'25px'}
+            radius={'xl'}
             label={
-              <Text weight={700} size={'lg'}>
+              <Text weight={700} size={'xl'}>
                 {t('input-title')}
               </Text>
             }
-            description={<Text size={'xs'}>{t('input-desc')}</Text>}
+            description={<Text size={'sm'}>{t('input-desc')}</Text>}
             placeholder={t('input-placeholder')}
             value={projectDescription}
             onChange={(event) =>
               setProjectDescription(event.currentTarget.value)
             }
-            minRows={6}
+            minRows={8}
+            size="lg"
             mx={{
               xs: 'auto',
               sm: 0,
@@ -254,7 +255,7 @@ const Home: FC<HomeProps> = (props) => {
                 }}
                 id={'output_box'}
                 style={{
-                  borderRadius: '25px',
+                  borderRadius: '2rem',
                 }}
                 modules={{
                   toolbar: [

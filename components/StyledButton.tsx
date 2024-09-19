@@ -26,6 +26,7 @@ function StyledButton({
       variant={app_theme !== 'dark' ? 'filled' : 'outline'}
       color="dark"
       disabled={disabled}
+      size="lg"
       styles={(theme) => ({
         root: {
           backgroundColor: app_theme !== 'dark' ? '#000000' : '#ffff',
