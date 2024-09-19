@@ -30,7 +30,7 @@ const Home: FC<HomeProps> = (props) => {
   // App theme setup
   const [app_theme, setAppTheme] = useState<string>(props.theme || 'light');
   const toggleColorScheme = (value?: ColorScheme) => {
-    console.log('Toggle color scheme', value);
+    // console.log('Toggle color scheme', value);
     setAppTheme(value === 'dark' ? 'dark' : 'light');
   };
   useEffect(() => {
@@ -189,7 +189,7 @@ const Home: FC<HomeProps> = (props) => {
             onChange={(event) =>
               setProjectDescription(event.currentTarget.value)
             }
-            minRows={8}
+            minRows={6}
             size="lg"
             mx={{
               xs: 'auto',
