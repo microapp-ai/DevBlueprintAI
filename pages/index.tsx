@@ -1,28 +1,14 @@
 import { FC, useEffect, useState } from 'react';
 import {
-  Select,
-  TextInput,
   Box,
   Flex,
-  NumberInput,
   Textarea,
-  Divider,
   Text,
-  Grid,
-  Button,
-  CopyButton,
-  rem,
   MantineProvider,
   ColorSchemeProvider,
   ColorScheme,
-  Switch,
 } from '@mantine/core';
-import Markdown from 'react-markdown';
 import removeMarkdown from 'markdown-to-text';
-import * as htmlToImage from 'html-to-image';
-import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
-import htmlToPdfmake from 'html-to-pdfmake';
-import { jsPDF } from 'jspdf';
 import useTranslation from 'next-translate/useTranslation';
 import domtoimage from 'dom-to-image';
 import { PDFDocument } from 'pdf-lib';
@@ -34,7 +20,6 @@ const QuillEditor = dynamic(() => import('react-quill'), {
 import 'react-quill/dist/quill.snow.css';
 
 import { IconCopy, IconPrinter } from '@tabler/icons-react';
-import { useColorScheme } from '@mantine/hooks';
 import StyledButton from '@/components/StyledButton';
 import { useRouter } from 'next/router';
 type HomeProps = {
