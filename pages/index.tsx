@@ -24,32 +24,31 @@ import { useRouter } from 'next/router';
 type Language = 'en' | 'es' | 'pt';
 
 type HomeProps = {
-  app_theme?: string; // 'light' | 'dark'
-  app_lang?: Language; // 'en' | 'es' | 'pt'
+  theme?: string; // 'light' | 'dark'
+  lang?: Language; // 'en' | 'es' | 'pt'
 };
 // TypeScript recognizes these as valid language codes
 
-const Home: React.FC<HomeProps> = ({
-  app_lang = 'en',
-  app_theme = 'light',
-}) => {
+const Home: React.FC<HomeProps> = (props) => {
   // App theme setup
-  // const [app_theme, setAppTheme] = useState<string>(props.theme || 'light');
-  // const toggleColorScheme = (value?: ColorScheme) => {
-  //   // console.log('Toggle color scheme', value);
-  //   setAppTheme(value === 'dark' ? 'dark' : 'light');
-  // };
-  // useEffect(() => {
-  //   if (props.theme) {
-  //     toggleColorScheme(props.theme === 'dark' ? 'dark' : 'light');
-  //   }
-  // }, [props.theme]);
-  // const [app_lang, setAppLang] = useState<string | 'en' | 'es' | 'pt'>(props.lang || 'en');
-  // useEffect(() => {
-  //   if (props.lang) {
-  //     setAppLang(props.lang);
-  //   }
-  // }, [props.lang]);
+  const [app_theme, setAppTheme] = useState<string>(props.theme || 'light');
+  const toggleColorScheme = (value?: ColorScheme) => {
+    // console.log('Toggle color scheme', value);
+    setAppTheme(value === 'dark' ? 'dark' : 'light');
+  };
+  useEffect(() => {
+    if (props.theme) {
+      toggleColorScheme(props.theme === 'dark' ? 'dark' : 'light');
+    }
+  }, [props.theme]);
+  const [app_lang, setAppLang] = useState<'en' | 'es' | 'pt'>(
+    props.lang || 'en'
+  );
+  useEffect(() => {
+    if (props.lang) {
+      setAppLang(props.lang);
+    }
+  }, [props.lang]);
 
   // const router = useRouter();
   // const { t, lang: currentLang } = useTranslation('common');
