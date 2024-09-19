@@ -241,7 +241,8 @@ Given the provided project description, generate a comprehensive outline outlini
     \n\n
     ## These points are only for reference, please generate the output based on the provided project description\n\n
     use HTML for better formatting\n\n
-    `;
+    Ensure that the output is in the same language as the input description.\n\n
+`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',

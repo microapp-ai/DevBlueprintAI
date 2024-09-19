@@ -12,6 +12,7 @@ import removeMarkdown from 'markdown-to-text';
 import useTranslation from 'next-translate/useTranslation';
 import domtoimage from 'dom-to-image';
 import { PDFDocument } from 'pdf-lib';
+import translations from './translations';
 
 import dynamic from 'next/dynamic';
 const QuillEditor = dynamic(() => import('react-quill'), {
@@ -22,41 +23,55 @@ import 'react-quill/dist/quill.snow.css';
 import { IconCopy, IconPrinter } from '@tabler/icons-react';
 import StyledButton from '@/components/StyledButton';
 import { useRouter } from 'next/router';
-type HomeProps = {
-  theme?: string; // 'light' | 'dark'
-};
+type Language = 'en' | 'es' | 'pt';
 
-const Home: FC<HomeProps> = (props) => {
+type HomeProps = {
+  app_theme?: string; // 'light' | 'dark'
+  app_lang?: Language; // 'en' | 'es' | 'pt'
+};
+// TypeScript recognizes these as valid language codes
+
+const Home: React.FC<HomeProps> = ({
+  app_lang = 'es',
+  app_theme = 'light',
+}) => {
   // App theme setup
-  const [app_theme, setAppTheme] = useState<string>(props.theme || 'light');
-  const toggleColorScheme = (value?: ColorScheme) => {
-    // console.log('Toggle color scheme', value);
-    setAppTheme(value === 'dark' ? 'dark' : 'light');
-  };
-  useEffect(() => {
-    if (props.theme) {
-      toggleColorScheme(props.theme === 'dark' ? 'dark' : 'light');
-    }
-  }, [props.theme]);
-  const router = useRouter();
-  const { t, lang: currentLang } = useTranslation('common');
-  const [language, setLanguage] = useState(currentLang);
-  useEffect(() => {
-    const { lang } = router.query;
-    console.log('Current Lang: ', lang, currentLang);
-    if (
-      lang &&
-      ['en', 'es', 'fr', 'pt'].includes(lang as string) &&
-      lang !== currentLang
-    ) {
-      // Update the locale without reloading the page
-      setLanguage(lang as string);
-      router.push(router.pathname, router.asPath, {
-        locale: lang as string,
-        shallow: true,
-      });
-    }
-  }, [router.query, currentLang, router]);
+  // const [app_theme, setAppTheme] = useState<string>(props.theme || 'light');
+  // const toggleColorScheme = (value?: ColorScheme) => {
+  //   // console.log('Toggle color scheme', value);
+  //   setAppTheme(value === 'dark' ? 'dark' : 'light');
+  // };
+  // useEffect(() => {
+  //   if (props.theme) {
+  //     toggleColorScheme(props.theme === 'dark' ? 'dark' : 'light');
+  //   }
+  // }, [props.theme]);
+  // const [app_lang, setAppLang] = useState<string | 'en' | 'es' | 'pt'>(props.lang || 'en');
+  // useEffect(() => {
+  //   if (props.lang) {
+  //     setAppLang(props.lang);
+  //   }
+  // }, [props.lang]);
+
+  // const router = useRouter();
+  // const { t, lang: currentLang } = useTranslation('common');
+  // const [language, setLanguage] = useState(currentLang);
+  // useEffect(() => {
+  //   const { lang } = router.query;
+  //   console.log('Current Lang: ', lang, currentLang);
+  //   if (
+  //     lang &&
+  //     ['en', 'es', 'fr', 'pt'].includes(lang as string) &&
+  //     lang !== currentLang
+  //   ) {
+  //     // Update the locale without reloading the page
+  //     setLanguage(lang as string);
+  //     router.push(router.pathname, router.asPath, {
+  //       locale: lang as string,
+  //       shallow: true,
+  //     });
+  //   }
+  // }, [router.query, currentLang, router]);
 
   const [projectDescription, setProjectDescription] = useState<string>('');
   const [output, setOutput] = useState<string>('');
@@ -156,7 +171,7 @@ const Home: FC<HomeProps> = (props) => {
   return (
     <ColorSchemeProvider
       colorScheme={app_theme === 'dark' ? 'dark' : 'light'}
-      toggleColorScheme={toggleColorScheme}
+      toggleColorScheme={() => {}}
     >
       <MantineProvider
         theme={{ colorScheme: app_theme === 'dark' ? 'dark' : 'light' }}
@@ -180,11 +195,13 @@ const Home: FC<HomeProps> = (props) => {
             radius={'xl'}
             label={
               <Text weight={700} size={'xl'}>
-                {t('input-title')}
+                {translations[app_lang].INPUT_TITLE}
               </Text>
             }
-            description={<Text size={'sm'}>{t('input-desc')}</Text>}
-            placeholder={t('input-placeholder')}
+            description={
+              <Text size={'sm'}>{translations[app_lang].INPUT_DESC}</Text>
+            }
+            placeholder={translations[app_lang].INPUT_PLACEHOLDER}
             value={projectDescription}
             onChange={(event) =>
               setProjectDescription(event.currentTarget.value)
@@ -205,7 +222,7 @@ const Home: FC<HomeProps> = (props) => {
 
           <Flex justify={'flex-end'} my={16}>
             <StyledButton
-              label={t('generate-label')}
+              label={translations[app_lang].GENERATE_LABEL}
               app_theme={app_theme}
               icon={
                 <svg
@@ -266,7 +283,7 @@ const Home: FC<HomeProps> = (props) => {
               />
               <Flex justify={'flex-end'} mt={12} gap={8}>
                 <StyledButton
-                  label={t('copy-label')}
+                  label={translations[app_lang].COPY_LABEL}
                   app_theme={app_theme}
                   icon={<IconCopy size={20} stroke={1} />}
                   loading={loading}
@@ -276,7 +293,7 @@ const Home: FC<HomeProps> = (props) => {
                   }}
                 />
                 <StyledButton
-                  label={t('print-label')}
+                  label={translations[app_lang].PRINT_LABEL}
                   app_theme={app_theme}
                   icon={<IconPrinter size={20} stroke={1} />}
                   loading={loading}
