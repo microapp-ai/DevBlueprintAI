@@ -27,7 +27,6 @@ type HomeProps = {
   theme?: string; // 'light' | 'dark'
   lang?: Language; // 'en' | 'es' | 'pt'
 };
-// TypeScript recognizes these as valid language codes
 
 const Home: React.FC<HomeProps> = (props) => {
   // App theme setup
@@ -164,7 +163,35 @@ const Home: React.FC<HomeProps> = (props) => {
       console.error(err);
     }
   };
-
+  const [boxMargin, setBoxMargin] = useState<number>(60);
+  const handleWidths = () => {
+    const app_container = document.getElementById('app_container');
+    console.log('App Container Width: ', app_container?.offsetWidth);
+    if (app_container?.offsetWidth && app_container?.offsetWidth - 1160 > 120) {
+      const margin = (app_container?.offsetWidth - 1160) / 2;
+      if (700 + margin > app_container?.offsetWidth) {
+        setBoxMargin(margin);
+      } else {
+        setBoxMargin((app_container?.offsetWidth - 700) / 2);
+      }
+    } else if (app_container?.offsetWidth) {
+      const margin = 60;
+      if (700 + margin > app_container?.offsetWidth) {
+        setBoxMargin(margin);
+      } else {
+        setBoxMargin((app_container?.offsetWidth - 700) / 2);
+      }
+    } else {
+      setBoxMargin(60);
+    }
+  };
+  useEffect(() => {
+    handleWidths();
+    window.addEventListener('resize', handleWidths);
+    return () => {
+      window.removeEventListener('resize', handleWidths);
+    };
+  }, []);
   return (
     <ColorSchemeProvider
       colorScheme={app_theme === 'dark' ? 'dark' : 'light'}
@@ -175,131 +202,130 @@ const Home: React.FC<HomeProps> = (props) => {
         withGlobalStyles
         withNormalizeCSS
       >
-        <Box
-          w={{
-            md: '57%',
-            base: '100%',
-          }}
-          p={8}
-          mx={'auto'}
-          my={{
-            md: 'lg',
-            base: 'xl',
-          }}
-        >
-          <Textarea
-            mt={'md'}
-            radius={'xl'}
-            label={
-              <Text weight={700} size={'xl'}>
-                {translations[app_lang].INPUT_TITLE}
-              </Text>
-            }
-            description={
-              <Text size={'sm'}>{translations[app_lang].INPUT_DESC}</Text>
-            }
-            placeholder={translations[app_lang].INPUT_PLACEHOLDER}
-            value={projectDescription}
-            onChange={(event) =>
-              setProjectDescription(event.currentTarget.value)
-            }
-            minRows={6}
-            size="lg"
-            mx={{
-              xs: 'auto',
-              sm: 0,
+        <Box id="app_container" w={'100%'}>
+          <Box
+            p={8}
+            my={{
+              md: 'lg',
+              base: 'xl',
             }}
-            styles={{
-              input: {
-                padding: '16px',
-                backgroundColor: 'transparent',
-              },
-            }}
-          />
-
-          <Flex justify={'flex-end'} my={16}>
-            <StyledButton
-              label={translations[app_lang].GENERATE_LABEL}
-              app_theme={app_theme}
-              icon={
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 22 22"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M13.5 4.33341V2.66675M13.5 14.3334V12.6667M7.66667 8.50008H9.33333M17.6667 8.50008H19.3333M15.8333 10.8334L16.8333 11.8334M15.8333 6.16675L16.8333 5.16675M3.5 18.5001L11 11.0001M11.1667 6.16675L10.1667 5.16675"
-                    stroke="#909098"
-                    stroke-width="1.75"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+            maw={700}
+            mx={boxMargin}
+          >
+            <Textarea
+              mt={'md'}
+              radius={'xl'}
+              label={
+                <Text weight={700} size={'xl'}>
+                  {translations[app_lang].INPUT_TITLE}
+                </Text>
               }
-              loading={loading}
-              disabled={projectDescription === ''}
-              onClick={handleGenerate}
+              description={
+                <Text size={'sm'}>{translations[app_lang].INPUT_DESC}</Text>
+              }
+              placeholder={translations[app_lang].INPUT_PLACEHOLDER}
+              value={projectDescription}
+              onChange={(event) =>
+                setProjectDescription(event.currentTarget.value)
+              }
+              minRows={6}
+              size="lg"
+              mx={{
+                xs: 'auto',
+                sm: 0,
+              }}
+              styles={{
+                input: {
+                  padding: '16px',
+                  backgroundColor: 'transparent',
+                },
+              }}
             />
-          </Flex>
 
-          {output !== '' && (
-            <>
-              <QuillEditor
-                value={output}
-                theme="snow"
-                onChange={(value) => {
-                  setOutput(value);
-                }}
-                id={'output_box'}
-                style={{
-                  borderRadius: '2rem',
-                }}
-                modules={{
-                  toolbar: [
-                    [{ font: [] }],
-                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                    [{ size: ['small', false, 'large', 'huge'] }], // text size options
-                    ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-                    [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-                    [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
-                    ['blockquote', 'code-block'],
-                    [{ list: 'ordered' }, { list: 'bullet' }],
-                    [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
-                    [{ direction: 'rtl' }], // text direction
-                    [
-                      {
-                        align: [],
-                      },
-                    ],
-                    // ['link', 'image', 'video'],
-                    ['clean'], // remove formatting button
-                  ],
-                }}
+            <Flex justify={'flex-end'} my={16}>
+              <StyledButton
+                label={translations[app_lang].GENERATE_LABEL}
+                app_theme={app_theme}
+                icon={
+                  <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 22 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M13.5 4.33341V2.66675M13.5 14.3334V12.6667M7.66667 8.50008H9.33333M17.6667 8.50008H19.3333M15.8333 10.8334L16.8333 11.8334M15.8333 6.16675L16.8333 5.16675M3.5 18.5001L11 11.0001M11.1667 6.16675L10.1667 5.16675"
+                      stroke="#909098"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                }
+                loading={loading}
+                disabled={projectDescription === ''}
+                onClick={handleGenerate}
               />
-              <Flex justify={'flex-end'} mt={12} gap={8}>
-                <StyledButton
-                  label={translations[app_lang].COPY_LABEL}
-                  app_theme={app_theme}
-                  icon={<IconCopy size={20} stroke={1} />}
-                  loading={loading}
-                  disabled={output === ''}
-                  onClick={() => {
-                    navigator.clipboard.writeText(getText());
+            </Flex>
+
+            {output !== '' && (
+              <>
+                <QuillEditor
+                  value={output}
+                  theme="snow"
+                  onChange={(value) => {
+                    setOutput(value);
+                  }}
+                  id={'output_box'}
+                  style={{
+                    borderRadius: '2rem',
+                  }}
+                  modules={{
+                    toolbar: [
+                      [{ font: [] }],
+                      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                      [{ size: ['small', false, 'large', 'huge'] }], // text size options
+                      ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+                      [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+                      [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+                      ['blockquote', 'code-block'],
+                      [{ list: 'ordered' }, { list: 'bullet' }],
+                      [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
+                      [{ direction: 'rtl' }], // text direction
+                      [
+                        {
+                          align: [],
+                        },
+                      ],
+                      // ['link', 'image', 'video'],
+                      ['clean'], // remove formatting button
+                    ],
                   }}
                 />
-                <StyledButton
-                  label={translations[app_lang].PRINT_LABEL}
-                  app_theme={app_theme}
-                  icon={<IconPrinter size={20} stroke={1} />}
-                  loading={loading}
-                  disabled={output === ''}
-                  onClick={handlePrint}
-                />
-              </Flex>
-            </>
-          )}
+                <Flex justify={'flex-end'} mt={12} gap={8}>
+                  <StyledButton
+                    label={translations[app_lang].COPY_LABEL}
+                    app_theme={app_theme}
+                    icon={<IconCopy size={20} stroke={1} />}
+                    loading={loading}
+                    disabled={output === ''}
+                    onClick={() => {
+                      navigator.clipboard.writeText(getText());
+                    }}
+                  />
+                  <StyledButton
+                    label={translations[app_lang].PRINT_LABEL}
+                    app_theme={app_theme}
+                    icon={<IconPrinter size={20} stroke={1} />}
+                    loading={loading}
+                    disabled={output === ''}
+                    onClick={handlePrint}
+                  />
+                </Flex>
+              </>
+            )}
+          </Box>
         </Box>
       </MantineProvider>
     </ColorSchemeProvider>
