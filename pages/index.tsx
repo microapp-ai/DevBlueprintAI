@@ -30,6 +30,9 @@ type HomeProps = {
 };
 
 const Home: React.FC<HomeProps> = (props) => {
+  useEffect(() => {
+    console.log('props', props);
+  }, [props]);
   // App theme setup
   const [app_theme, setAppTheme] = useState<string>(props.theme || 'light');
   const toggleColorScheme = (value?: ColorScheme) => {
