@@ -167,7 +167,7 @@ const Home: React.FC<HomeProps> = (props) => {
   const [boxMargin, setBoxMargin] = useState<number>(60);
   const handleWidths = () => {
     const app_container = document.getElementById('app_container');
-    console.log('App Container Width: ', app_container?.offsetWidth);
+    // console.log('App Container Width: ', app_container?.offsetWidth);
     if (app_container?.offsetWidth && app_container?.offsetWidth - 1160 > 120) {
       const margin = (app_container?.offsetWidth - 1160) / 2;
       if (700 + margin > app_container?.offsetWidth) {
