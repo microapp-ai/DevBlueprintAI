@@ -45,6 +45,7 @@ const Home: React.FC<HomeProps> = (props) => {
     props.lang || 'en'
   );
   useEffect(() => {
+    console.log('PROPS: ', props);
     if (props.lang) {
       if (props.lang != app_lang) {
         window.location.reload();
