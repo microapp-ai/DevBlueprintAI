@@ -187,16 +187,24 @@ const Home: React.FC<HomeProps> = (props) => {
   };
   useEffect(() => {
     handleWidths();
-    window.addEventListener('resize', handleWidths);
-    return () => {
-      window.removeEventListener('resize', handleWidths);
-    };
+    const app_container = document.getElementById('app_container');
+    if (app_container) {
+      window.addEventListener('resize', handleWidths);
+    }
   }, []);
   return (
     <ColorSchemeProvider
       colorScheme={app_theme === 'dark' ? 'dark' : 'light'}
       toggleColorScheme={() => {}}
     >
+      <style jsx global>{`
+        .ql-toolbar {
+          border-radius: 2rem 2rem 0 0;
+        }
+        .ql-container {
+          border-radius: 0 0 2rem 2rem;
+        }
+      `}</style>
       <MantineProvider
         theme={{ colorScheme: app_theme === 'dark' ? 'dark' : 'light' }}
         withGlobalStyles
@@ -216,12 +224,14 @@ const Home: React.FC<HomeProps> = (props) => {
               mt={'md'}
               radius={'xl'}
               label={
-                <Text weight={700} size={'xl'}>
+                <Text weight={700} size={'xl'} mb={4}>
                   {translations[app_lang].INPUT_TITLE}
                 </Text>
               }
               description={
-                <Text size={'sm'}>{translations[app_lang].INPUT_DESC}</Text>
+                <Text size={'sm'} mb={12}>
+                  {translations[app_lang].INPUT_DESC}
+                </Text>
               }
               placeholder={translations[app_lang].INPUT_PLACEHOLDER}
               value={projectDescription}
@@ -240,16 +250,17 @@ const Home: React.FC<HomeProps> = (props) => {
                   backgroundColor: 'transparent',
                 },
               }}
+              mb={24}
             />
 
-            <Flex justify={'flex-end'} my={16}>
+            <Flex justify={'flex-end'} mb={32}>
               <StyledButton
                 label={translations[app_lang].GENERATE_LABEL}
                 app_theme={app_theme}
                 icon={
                   <svg
-                    width="22"
-                    height="22"
+                    width="18"
+                    height="18"
                     viewBox="0 0 22 22"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
