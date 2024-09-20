@@ -7,6 +7,7 @@ import {
   MantineProvider,
   ColorSchemeProvider,
   ColorScheme,
+  Slider,
 } from '@mantine/core';
 import removeMarkdown from 'markdown-to-text';
 import useTranslation from 'next-translate/useTranslation';
@@ -186,10 +187,25 @@ const Home: React.FC<HomeProps> = (props) => {
     }
   };
   useEffect(() => {
-    handleWidths();
     const app_container = document.getElementById('app_container');
     if (app_container) {
-      window.addEventListener('resize', handleWidths);
+      // Create a new ResizeObserver
+      const resizeObserver = new ResizeObserver(() => {
+        handleWidths();
+      });
+
+      // Start observing the app_container element
+      resizeObserver.observe(app_container);
+
+      // Call the function initially
+      handleWidths();
+
+      // Cleanup the observer when the component unmounts
+      return () => {
+        if (app_container) {
+          resizeObserver.unobserve(app_container);
+        }
+      };
     }
   }, []);
   return (
