@@ -314,23 +314,23 @@ const Home: React.FC<HomeProps> = (props) => {
                       [{ header: [1, 2, 3, 4, 5, 6, false] }],
                       [{ size: ['small', false, 'large', 'huge'] }], // text size options
                       ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-                      [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-                      [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
-                      ['blockquote', 'code-block'],
+                      // [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+                      // [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+                      // ['blockquote', 'code-block'],
                       [{ list: 'ordered' }, { list: 'bullet' }],
-                      [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
-                      [{ direction: 'rtl' }], // text direction
+                      // [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
+                      // [{ direction: 'rtl' }], // text direction
                       [
                         {
                           align: [],
                         },
                       ],
                       // ['link', 'image', 'video'],
-                      ['clean'], // remove formatting button
+                      // ['clean'], // remove formatting button
                     ],
                   }}
                 />
-                <Flex justify={'flex-end'} mt={12} gap={8}>
+                <Flex justify={'flex-end'} mt={24} gap={8} mb={48}>
                   <StyledButton
                     label={translations[app_lang].COPY_LABEL}
                     app_theme={app_theme}
