@@ -46,30 +46,12 @@ const Home: React.FC<HomeProps> = (props) => {
   );
   useEffect(() => {
     if (props.lang) {
+      if (props.lang != app_lang) {
+        window.location.reload();
+      }
       setAppLang(props.lang);
-      // window.location.reload();
     }
   }, [props.lang]);
-
-  // const router = useRouter();
-  // const { t, lang: currentLang } = useTranslation('common');
-  // const [language, setLanguage] = useState(currentLang);
-  // useEffect(() => {
-  //   const { lang } = router.query;
-  //   console.log('Current Lang: ', lang, currentLang);
-  //   if (
-  //     lang &&
-  //     ['en', 'es', 'fr', 'pt'].includes(lang as string) &&
-  //     lang !== currentLang
-  //   ) {
-  //     // Update the locale without reloading the page
-  //     setLanguage(lang as string);
-  //     router.push(router.pathname, router.asPath, {
-  //       locale: lang as string,
-  //       shallow: true,
-  //     });
-  //   }
-  // }, [router.query, currentLang, router]);
 
   const [projectDescription, setProjectDescription] = useState<string>('');
   const [output, setOutput] = useState<string>('');
