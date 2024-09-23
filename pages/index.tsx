@@ -202,11 +202,24 @@ const Home: React.FC<HomeProps> = (props) => {
     >
       <style jsx global>{`
         .ql-toolbar {
-          border-radius: 2rem 2rem 0 0;
+          border: 1px solid ${app_theme === 'dark' ? '#2C2C30' : '#ccc'} !important;
+          border-radius: 25px 25px 0 0;
         }
         .ql-container {
-          border-radius: 0 0 2rem 2rem;
+          border: 1px solid ${app_theme === 'dark' ? '#2C2C30' : '#ccc'} !important;
+          border-radius: 0 0 25px 25px;
         }
+        ${app_theme === 'dark'
+          ? `.ql-toolbar svg,
+.ql-toolbar rect,
+.ql-toolbar line,
+.ql-toolbar path,
+.ql-toolbar span {
+          /* fill: #ccc !important; */
+          stroke: #ccc !important;
+          color: #ccc !important; 
+        }`
+          : ''}
       `}</style>
       <MantineProvider
         theme={{ colorScheme: app_theme === 'dark' ? 'dark' : 'light' }}
@@ -251,6 +264,8 @@ const Home: React.FC<HomeProps> = (props) => {
                 input: {
                   padding: '16px',
                   backgroundColor: 'transparent',
+                  border:
+                    '1px solid ' + (app_theme === 'dark' ? '#2C2C30' : '#ccc'),
                 },
               }}
               mb={24}
@@ -293,7 +308,7 @@ const Home: React.FC<HomeProps> = (props) => {
                   }}
                   id={'output_box'}
                   style={{
-                    borderRadius: '2rem',
+                    borderRadius: '25px',
                   }}
                   modules={{
                     toolbar: [
