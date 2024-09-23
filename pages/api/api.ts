@@ -218,30 +218,29 @@ export default async function handler(
 Given the provided project description, generate a comprehensive outline outlining the project requirements, recommended technologies, to-do list for development, and additional considerations. Please ensure that the output includes both functional and non-functional requirements, along with suitable technology recommendations and development steps.Please use the format
     
     \n\n
-# Project Outline
+Project Outline
 \n
 \n
 
-# Project Requirements:\n
-    # Functional Requirements:\n
+Project Requirements:\n
+  Functional Requirements:\n
     ...
     ...\n
-    # Non-Functional Requirements:\n
+Non-Functional Requirements:\n
     ...
     ...\n
-# Development Environment Setup:\n
+Development Environment Setup:\n
     ...
     ...\n
-# To-Do List:\n
+To-Do List:\n
     ...
     ...\n
-# Resource Recommendations:\n
+Resource Recommendations:\n
     ...
     ...\n
     \n\n
-    ## These points are only for reference, please generate the output based on the provided project description\n\n
-    use HTML for better formatting\n\n
-    Ensure that the output is in the same language as the input description.\n\n
+## These points are only for reference, please generate the output based on the provided project description,you can use other points as well\n\n
+## Use only HTML tags to format the output,please don't use markdown for formatting\n\n
 `;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -268,10 +267,11 @@ Given the provided project description, generate a comprehensive outline outlini
       }),
     });
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
+    console.log('PROMPT: ', prompt);
     let output = data.choices[0].message.content;
     output = output;
-    console.log(output);
+    // console.log(output);
     res.status(200).json({
       text: output,
     });
