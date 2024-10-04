@@ -256,40 +256,50 @@ const Home: React.FC<HomeProps> = (props) => {
             maw={700}
             mx={boxMargin}
           >
-            <Textarea
-              mt={'md'}
-              radius={'xl'}
-              label={
-                <Text weight={700} size={'xl'} mb={4}>
-                  {translations[app_lang].INPUT_TITLE}
-                </Text>
-              }
-              description={
-                <Text size={'sm'} mb={12}>
-                  {translations[app_lang].INPUT_DESC}
-                </Text>
-              }
-              placeholder={translations[app_lang].INPUT_PLACEHOLDER}
-              value={projectDescription}
-              onChange={(event) =>
-                setProjectDescription(event.currentTarget.value)
-              }
-              minRows={6}
-              size="lg"
-              mx={{
-                xs: 'auto',
-                sm: 0,
+            <div
+              style={{
+                // border: '1px solid ' + (app_theme === 'dark' ? '#2C2C30' : '#ccc'),
+                borderRadius: '25px',
+                overflow: 'hidden',
               }}
-              styles={{
-                input: {
-                  padding: '16px',
-                  backgroundColor: 'transparent',
-                  border:
-                    '1px solid ' + (app_theme === 'dark' ? '#2C2C30' : '#ccc'),
-                },
-              }}
-              mb={24}
-            />
+            >
+              <Textarea
+                mt={'md'}
+                radius={'24px'}
+                label={
+                  <Text weight={700} size={'xl'} mb={4}>
+                    {translations[app_lang].INPUT_TITLE}
+                  </Text>
+                }
+                description={
+                  <Text size={'sm'} mb={12}>
+                    {translations[app_lang].INPUT_DESC}
+                  </Text>
+                }
+                placeholder={translations[app_lang].INPUT_PLACEHOLDER}
+                value={projectDescription}
+                onChange={(event) =>
+                  setProjectDescription(event.currentTarget.value)
+                }
+                minRows={6}
+                size="lg"
+                mx={{
+                  xs: 'auto',
+                  sm: 0,
+                }}
+                styles={{
+                  input: {
+                    padding: '16px',
+                    backgroundColor: 'transparent',
+                    border:
+                      '1px solid ' +
+                      (app_theme === 'dark' ? '#2C2C30' : '#ccc'),
+                    overflowY: 'auto',
+                  },
+                }}
+                mb={24}
+              />
+            </div>
 
             <Flex justify={'flex-end'} mb={32}>
               <StyledButton
