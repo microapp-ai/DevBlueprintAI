@@ -220,6 +220,26 @@ const Home: React.FC<HomeProps> = (props) => {
           color: #ccc !important; 
         }`
           : ''}
+
+        ::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: transparent; /* Background of the scrollbar track */
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background-color: #888; /* Color of the scrollbar handle */
+          border-radius: 10px;
+          border: 3px solid transparent; /* Padding around the handle */
+          background-clip: padding-box;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background-color: #555; /* Darker color when hovered */
+        }
       `}</style>
       <MantineProvider
         theme={{ colorScheme: app_theme === 'dark' ? 'dark' : 'light' }}
